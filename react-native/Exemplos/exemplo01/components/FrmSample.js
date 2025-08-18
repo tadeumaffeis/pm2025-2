@@ -46,7 +46,7 @@ export default function FrmSample({ onSave = () => {} }) {
         dataNascimento
       )}\nE-mail: ${email}`
     );
-    console.warn(data)
+    console.warn("Full: ", data);
     onSave(data);
   };
 

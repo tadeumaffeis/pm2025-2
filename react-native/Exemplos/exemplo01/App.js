@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import FrmSample from "./components/FrmSample";           // formulário completo
 import FrmSampleBasic from "./components/FrmSampleBasic"; // formulário básico
+import DataList from './components/DataList'; // List de dados
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,9 +11,7 @@ export default function App() {
   const [selectedForm, setSelectedForm] = useState("basic"); // mostra algo por padrão
 
   const addData = (d) => {
-    console.warn('--->', d);
     setData((prev) => [...prev, d]);
-    console.warn("data", data);
   };
 
   const chooseForm = (key) => {
@@ -57,13 +56,20 @@ export default function App() {
           >
             <Text style={styles.menuText}>Formulário Completo</Text>
           </Pressable>
+          <Pressable
+            onPress={() => chooseForm("list")}
+            style={({ pressed }) => [styles.menuItem, pressed && styles.menuItemPressed]}
+          >
+            <Text style={styles.menuText}>Listar dados</Text>
+          </Pressable>
         </View>
       )}
 
       {/* Área de conteúdo (abaixo do header) */}
       <View style={styles.content}>
-        {selectedForm === "basic" && <FrmSampleBasic onSave={formSave} />}
+        {selectedForm === "basic" && <FrmSampleBasic onSave={formSave}/>}
         {selectedForm === "full" && <FrmSample onSave={formSave} />}
+        {selectedForm === "list" && <DataList data={data} />}
       </View>
 
       <StatusBar style="auto" />
