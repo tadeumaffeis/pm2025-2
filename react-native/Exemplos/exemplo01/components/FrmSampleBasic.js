@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from "react-native";
 
-export default function FrmSampleBasic() {
+export default function FrmSampleBasic({ onSave = () => {} }) {
   const [identificacao, setIdentificacao] = useState("");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -23,10 +23,15 @@ export default function FrmSampleBasic() {
   };
 
   const handleSubmit = () => {
+        const data = {id: `${identificacao}`,
+            nome: `${nome}`,
+            email : `${email}`};
     Alert.alert(
       "Dados do Formulário",
       `Identificação: ${identificacao}\nNome: ${nome}\nE-mail: ${email}`
     );
+    console.warn(data)
+    onSave(data);
   };
 
   return (

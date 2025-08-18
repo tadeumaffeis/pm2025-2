@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function FrmSample() {
+export default function FrmSample({ onSave = () => {} }) {
   const [identificacao, setIdentificacao] = useState("");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -35,12 +35,19 @@ export default function FrmSample() {
   };
 
   const handleSubmit = () => {
+    const data = {id: `${identificacao}`,
+            nome: `${nome}`,
+            dtnasc : `${formatDate(dataNascimento)}`,
+            email : `${email}`};
+
     Alert.alert(
       "Dados do Formulário",
       `Identificação: ${identificacao}\nNome: ${nome}\nData Nasc.: ${formatDate(
         dataNascimento
       )}\nE-mail: ${email}`
     );
+    console.warn(data)
+    onSave(data);
   };
 
   return (
