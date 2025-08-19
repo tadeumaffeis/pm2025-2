@@ -1,0 +1,11 @@
+1.) Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+2.) System reboot
+
+3.) Get-Service wuauserv,bits | Format-Table Name,Status,StartType
+4.) Start-Service wuauserv
+5.) Start-Service bits
+5.1) Add-AppxPackage .\Microsoft.WSL_*.msixbundle
+
+6.) msiexec /i .\wsl_update_x64.msi /qn
+
+7.) wsl --set-default-version 2
