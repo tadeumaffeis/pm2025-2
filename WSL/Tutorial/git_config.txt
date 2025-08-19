@@ -1,0 +1,13 @@
+# Se você já usou 'store':
+rm -f ~/.git-credentials
+
+# Garanta que não há helper antigo atrapalhando
+git config --global --unset credential.helper 2>/dev/null || true
+
+git config --global credential.helper store
+
+git config --global user.name "Seu Nome"
+git config --global user.email seu.email@exemplo.com
+
+
+
