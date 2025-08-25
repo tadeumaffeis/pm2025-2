@@ -1,0 +1,84 @@
+import React, { useState } from "react";
+import {
+  Modal,
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
+import FrmSample from "./FrmSample";
+
+export default function FrmSampleModal() {
+  const [visible, setVisible] = useState(false);
+
+  const handleSave = (formData) => {
+    console.log("Salvou:", formData);
+    setVisible(false);
+  };
+
+  return (
+    <View style={styles.screen}>
+      <Button title="Abrir Formulário" onPress={() => setVisible(true)} />
+
+      <Modal
+        visible={visible}
+        animationType="slide"
+        transparent
+        statusBarTranslucent
+        onRequestClose={() => setVisible(false)} // botão "back" do Android
+      >
+        <View style={styles.overlay}>
+          <SafeAreaView style={styles.modal}>
+            {/* X no canto */}
+            <TouchableOpacity
+              style={styles.closeIcon}
+              onPress={() => setVisible(false)}
+              accessibilityLabel="Fechar"
+            >
+              <Text style={styles.closeText}>×</Text>
+            </TouchableOpacity>
+
+            {/* Formulário */}
+            <FrmSample onSave={handleSave} />
+
+            {/* Botão fechar no final */}
+            <View style={styles.footer}>
+              <Button title="Fechar" onPress={() => setVisible(false)} />
+            </View>
+          </SafeAreaView>
+        </View>
+      </Modal>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  screen: { flex: 1, justifyContent: "center", alignItems: "center" },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    padding: 20,
+  },
+  modal: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 20,
+    maxHeight: "90%",
+  },
+  closeIcon: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 10,
+    padding: 4,
+  },
+  closeText: {
+    fontSize: 28,
+    lineHeight: 28,
+    color: "#333",
+  },
+  footer: { marginTop: 20 },
+});

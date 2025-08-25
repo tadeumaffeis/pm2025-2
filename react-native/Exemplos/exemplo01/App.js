@@ -8,7 +8,7 @@ import DataList from './components/DataList'; // List de dados
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [selectedForm, setSelectedForm] = useState("basic"); // mostra algo por padrão
+  const [selectedForm, setSelectedForm] = useState("noting"); // mostra algo por padrão
 
   const addData = (d) => {
     setData((prev) => [...prev, d]);
@@ -23,6 +23,11 @@ export default function App() {
     // opcional: guarde qual form salvou
     addData({ form: formKey ?? selectedForm, ...formData });
   };
+
+  const onRemove = (info) => {
+    const updated = data.filter((it) => it.id !== info);
+    setData(updated);
+  }
 
   return (
     <View style={styles.app}>
@@ -69,7 +74,7 @@ export default function App() {
       <View style={styles.content}>
         {selectedForm === "basic" && <FrmSampleBasic onSave={formSave}/>}
         {selectedForm === "full" && <FrmSample onSave={formSave} />}
-        {selectedForm === "list" && <DataList data={data} />}
+        {selectedForm === "list" && <DataList data={data} onRemove={onRemove}/>}
       </View>
 
       <StatusBar style="auto" />
