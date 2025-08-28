@@ -30,7 +30,7 @@ export default function FrmSampleBasic({ onSave = () => { console.warn("Noting")
       "Dados do Formulário",
       `Identificação: ${identificacao}\nNome: ${nome}\nE-mail: ${email}`
     );
-    onSave(data);
+    onSave(data, `${identificacao}`);
   };
 
   return (

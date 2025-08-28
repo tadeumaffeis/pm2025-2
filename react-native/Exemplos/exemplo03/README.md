@@ -1,0 +1,1 @@
+npx create-expo-app exemplo03 --template blank

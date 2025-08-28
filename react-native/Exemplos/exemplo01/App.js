@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
+import { StyleSheet, View, Text, Pressable, Platform, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import FrmSample from "./components/FrmSample";           // formulário completo
 import FrmSampleBasic from "./components/FrmSampleBasic"; // formulário básico
@@ -20,9 +20,14 @@ export default function App() {
   };
 
   const formSave = (formData, formKey) => {
-    // opcional: guarde qual form salvou
-    addData({ form: formKey ?? selectedForm, ...formData });
+    const dataExists = data.filter((it) => it.id === formKey);
+    if (dataExists.length === 0) {
+      addData({ form: formKey ?? selectedForm, ...formData });
+    } else {
+      Alert.alert("Key exists on data");
+    }
   };
+
 
   const onRemove = (info) => {
     const updated = data.filter((it) => it.id !== info);
@@ -72,9 +77,9 @@ export default function App() {
 
       {/* Área de conteúdo (abaixo do header) */}
       <View style={styles.content}>
-        {selectedForm === "basic" && <FrmSampleBasic onSave={formSave}/>}
-        {selectedForm === "full" && <FrmSample onSave={formSave} />}
-        {selectedForm === "list" && <DataList data={data} onRemove={onRemove}/>}
+        {selectedForm === "basic" && <FrmSampleBasic onSave={formSave} />}
+        {selectedForm === "full"  && <FrmSample onSave={formSave} />}
+        {selectedForm === "list"  && <DataList data={data} onRemove={onRemove} />}
       </View>
 
       <StatusBar style="auto" />

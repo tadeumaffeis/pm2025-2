@@ -45,7 +45,7 @@ function toISODate(date) {
   return `${y}-${m}-${d}`;
 }
 
-export default function FrmSample({ onSave = () => {}, data = {} }) {
+export default function FrmSample({ onSave = () => { }, data = {} }) {
   const [identificacao, setIdentificacao] = useState(data.identificacao || "");
   const [nome, setNome] = useState(data.nome || "");
   const [email, setEmail] = useState(data.email || "");
@@ -60,7 +60,12 @@ export default function FrmSample({ onSave = () => {}, data = {} }) {
     setNome(data.nome || "");
     setEmail(data.email || "");
     setDataNascimento(data.dataNascimento ? parseDateLoose(data.dataNascimento) : new Date());
-  }, [data]);
+  }, [
+    data?.identificacao,
+    data?.nome,
+    data?.email,
+    data?.dataNascimento
+  ]);
 
   const onChangeData = (_event, selectedDate) => {
     setShowDatePicker(false);
@@ -83,7 +88,7 @@ export default function FrmSample({ onSave = () => {}, data = {} }) {
         dataNascimento
       )}\nE-mail: ${email}`
     );
-    onSave(formData);
+    onSave(formData, `${identificacao}`);
   };
 
   return (

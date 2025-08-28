@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, Pressable, Alert } from "react-native";
 import { RadioButton } from "react-native-paper";
+import { MaterialIcons } from "@expo/vector-icons"; // expo install @expo/vector-icons
 
 export default function DataList({ data = [], onRemove }) {
   const [list, setList] = useState(Array.isArray(data) ? data : []);
   const [selected, setSelected] = useState(null); // guarda o id do selecionado
   const [modalOn, setModalOn] = useState(false);
 
-  // Mantém a lista sincronizada se a prop "data" mudar
   useEffect(() => {
     setList(Array.isArray(data) ? data : []);
-    setSelected(null);
   }, [data]);
 
   const handleRemoveSelected = () => {
@@ -21,7 +20,6 @@ export default function DataList({ data = [], onRemove }) {
     const updated = list.filter((it) => it.id !== selected);
     setList(updated);
     setSelected(null);
-    // Se o pai quiser saber que removeu (opcional)
     if (typeof onRemove === "function") onRemove(selected, updated);
   };
 
@@ -49,10 +47,8 @@ export default function DataList({ data = [], onRemove }) {
           onPress={handleRemoveSelected}
           hitSlop={8}
           android_ripple={{ borderless: true }}
-          accessibilityRole="button"
-          accessibilityLabel="Remover item selecionado"
         >
-          <Text style={styles.removeBtn}>-</Text>
+          <MaterialIcons name="remove-circle-outline" size={28} color="red" />
         </Pressable>
       </View>
 
@@ -71,16 +67,10 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between", // título à esquerda, "-" à direita
+    justifyContent: "space-between",
     marginBottom: 8,
   },
   title: { fontSize: 18, fontWeight: "600" },
-  removeBtn: {
-    fontSize: 24,
-    fontWeight: "bold",
-    paddingHorizontal: 12,
-    paddingVertical: 2,
-  },
   item: {
     flexDirection: "row",
     alignItems: "center",
@@ -91,7 +81,6 @@ const styles = StyleSheet.create({
   },
   text: { fontSize: 16 },
   empty: { fontSize: 14, fontStyle: "italic", color: "#666" },
-  result: { marginTop: 12, fontWeight: "bold", color: "#333" },
 });
 
 
