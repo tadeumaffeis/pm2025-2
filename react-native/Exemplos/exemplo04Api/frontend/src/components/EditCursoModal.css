@@ -1,0 +1,23 @@
+.sigla-text {
+  font-size: 16px;
+  color: #666;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.save-button {
+  background: #FF9800;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.save-button:hover {
+  background: #e68900;
+}
