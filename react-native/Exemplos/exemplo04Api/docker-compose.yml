@@ -28,7 +28,7 @@ services:
         condition: service_healthy
     environment:
       # Exemplo de variável apontando para o Postgres do compose
-      DATABASE_URL: ${DATABASE_URL:-pm2025-2-postgresql-container://pm20252:pm20252@db:5432/pm20252db}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://pm20252:pm20252@db:5432/pm20252db}
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${BACKEND_PORT:-3000}
     ports:
