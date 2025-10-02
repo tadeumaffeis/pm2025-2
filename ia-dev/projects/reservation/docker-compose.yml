@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  reservation-mysql:
+    image: mysql:8.0
+    container_name: reservation-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root   
+      MYSQL_DATABASE: horarios_labs
+      MYSQL_USER: reservation
+      MYSQL_PASSWORD: reservation
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - reservation-network
+
+  reservation-flyway:
+    image: flyway/flyway:latest
+    container_name: reservation-flyway
+    depends_on:
+      - reservation-mysql
+    volumes:
+      - ./db/migration:/flyway/sql
+    command: -url=jdbc:mysql://reservation-mysql:3306/horarios_labs -user=reservation -password=reservation -connectRetries=60 migrate
+    networks:
+      - reservation-network
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: unless-stopped
+    networks:
+      - reservation-network
+
+volumes:
+  mysql_data:
+  portainer_data:
+
+networks:
+  reservation-network:
+    driver: bridge
