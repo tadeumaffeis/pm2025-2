@@ -5,14 +5,10 @@ services:
       context: ./postgresql        # <-- ajuste para a pasta do Dockerfile do banco
       dockerfile: Dockerfile       # <-- nome do Dockerfile do banco (se diferente, mude aqui)
     image: pm2025-2-postgresql-image
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-appdb}
-      POSTGRES_USER: ${POSTGRES_USER:-appuser}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apppass}
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgresql-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 10s
@@ -32,7 +28,7 @@ services:
         condition: service_healthy
     environment:
       # Exemplo de variável apontando para o Postgres do compose
-      DATABASE_URL: ${DATABASE_URL:-postgresql://appuser:apppass@db:5432/appdb}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://pm20252:pm20252@db:5432/pm20252db}
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${BACKEND_PORT:-3000}
     ports:
@@ -50,7 +46,7 @@ services:
       - backend
     environment:
       # Caso o frontend precise saber o endpoint do backend em build-time
-      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://pm2025-2-backend-container:3000}
     ports:
       - "80:80"
     networks:
@@ -61,4 +57,4 @@ networks:
     driver: bridge
 
 volumes:
-  pgdata:
+  postgresql-data:
