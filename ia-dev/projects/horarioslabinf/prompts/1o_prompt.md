@@ -3,11 +3,12 @@
 ## 1o. Prompt 
 
 @backend
+
 Crie um projeto Node.js moderno para o backend da aplicação, utilizando a arquitetura MVC (Model, View, Controller), com separação clara entre camadas.
 
 A aplicação deve:
 
-Utilizar Javaccript para maior segurança e legibilidade.
+Utilizar Javascript para maior segurança e legibilidade.
 
 Adotar padrões de projeto atuais, como Repository Pattern, Service Layer e Dependency Injection.
 
