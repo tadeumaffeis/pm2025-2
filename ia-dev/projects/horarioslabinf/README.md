@@ -12,11 +12,8 @@ Este projeto contém a configuração Docker para os serviços de banco de dados
 ## Como Executar
 
 1. Certifique-se de ter o Docker e Docker Compose instalados
-2. Execute o script:
-   ```bash
-   start.bat
-   ```
-   
+2. Execute:
+
    Ou manualmente:
    ```bash
    # Parar containers existentes

@@ -40,7 +40,7 @@ services:
     restart: unless-stopped
 
   # Flyway Service
-  flyway:
+   pm20252_flyway_service:
     image: flyway/flyway:latest
     container_name: pm20252_flyway_container
     command: [
@@ -60,7 +60,7 @@ services:
       - pm20252_network
 
   # Portainer Service
-  portainer:
+  pm20252_portainer_service:
     image: portainer/portainer-ce:latest
     container_name: pm20252_portainer_container
     ports:
