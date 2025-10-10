@@ -1,0 +1,80 @@
+services:
+  # MySQL Service
+  pm20252_mysql_service:
+    image: mysql:8.0
+    container_name: pm20252_mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: A12345678a
+      MYSQL_DATABASE: PM20252_HORARIO_LAB
+      MYSQL_USER: pm20252_mysql_dbuser
+      MYSQL_PASSWORD: A12345678a
+    command: --default-authentication-plugin=mysql_native_password --skip-ssl
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - pm20252_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # MongoDB Service
+  pm20252_mongo_service:
+    image: mongo:7.0
+    container_name: pm20252_mongo_container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pm20252_mongo_dbuser
+      MONGO_INITDB_ROOT_PASSWORD: A12345678a
+      MONGO_INITDB_DATABASE: PM20252_MONGO_DB
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - pm20252_network
+    restart: unless-stopped
+
+  # Flyway Service
+   pm20252_flyway_service:
+    image: flyway/flyway:latest
+    container_name: pm20252_flyway_container
+    command: [
+      "-url=jdbc:mysql://pm20252_mysql_service:3306/PM20252_HORARIO_LAB?useSSL=false&allowPublicKeyRetrieval=true",
+      "-user=pm20252_mysql_dbuser",
+      "-password=A12345678a",
+      "-connectRetries=60",
+      "-locations=filesystem:/flyway/sql",
+      "migrate"
+    ]
+    volumes:
+      - ./flyway/sql:/flyway/sql
+    depends_on:
+      pm20252_mysql_service:
+        condition: service_healthy
+    networks:
+      - pm20252_network
+
+  # Portainer Service
+  pm20252_portainer_service:
+    image: portainer/portainer-ce:latest
+    container_name: pm20252_portainer_container
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - pm20252_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  mongo_data:
+  portainer_data:
+
+networks:
+  pm20252_network:
+    driver: bridge
