@@ -58,6 +58,54 @@ services:
     networks:
       - pm20252_network
 
+  # Backend Service
+  pm20252_backend_service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pm20252_backend_container
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MYSQL_HOST: pm20252_mysql_service
+      MYSQL_PORT: 3306
+      MYSQL_USER: pm20252_mysql_dbuser
+      MYSQL_PASSWORD: A12345678a
+      MYSQL_DATABASE: PM20252_HORARIO_LAB
+      MONGODB_URI: mongodb://pm20252_mongo_dbuser:A12345678a@pm20252_mongo_service:27017/
+      JWT_SECRET: horarios-lab-super-secret-key-2025
+      JWT_EXPIRES_IN: 24h
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX_REQUESTS: 100
+    ports:
+      - "3000:3000"
+    depends_on:
+      pm20252_mysql_service:
+        condition: service_healthy
+      pm20252_mongo_service:
+        condition: service_started
+      pm20252_flyway_service:
+        condition: service_completed_successfully
+    networks:
+      - pm20252_network
+    restart: unless-stopped
+
+  # Frontend Service
+  pm20252_frontend_service:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pm20252_frontend_container
+    environment:
+      VITE_API_URL: http://localhost:3000/api/v1
+    ports:
+      - "3001:3001"
+    depends_on:
+      - pm20252_backend_service
+    networks:
+      - pm20252_network
+    restart: unless-stopped
+
   # Portainer Service
   pm20252_portainer_service:
     image: portainer/portainer-ce:latest

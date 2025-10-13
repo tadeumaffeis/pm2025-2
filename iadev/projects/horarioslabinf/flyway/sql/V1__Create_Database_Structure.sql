@@ -1,5 +1,6 @@
 -- Criação da estrutura do banco de dados PM20252_HORARIO_LAB
 -- Modelo Entidade-Relacionamento baseado em Horarios_Laboratórios_TI_1sem_2025
+-- Inclui sistema de autenticação com usuários
 
 CREATE TABLE IF NOT EXISTS CURSO (
     id_curso INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,6 +38,16 @@ CREATE TABLE IF NOT EXISTS DIA_SEMANA (
     nome VARCHAR(20) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS USUARIO (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'user') DEFAULT 'user',
+    ativo BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS AULA (
     id_aula INT AUTO_INCREMENT PRIMARY KEY,
     id_disciplina INT,
@@ -48,3 +59,8 @@ CREATE TABLE IF NOT EXISTS AULA (
     FOREIGN KEY (id_horario) REFERENCES HORARIO(id_horario),
     FOREIGN KEY (id_dia) REFERENCES DIA_SEMANA(id_dia)
 );
+
+-- Inserir usuários padrão (admin123 / user123)
+INSERT INTO USUARIO (username, password_hash, role) VALUES 
+('admin', '$2a$10$Ziq2Gzg56zD3Hn18X7MhJugVddNk3CzUXA/3kRGPj1WWcAD5eFDrC', 'admin'),
+('user', '$2a$10$DlwHy8ZRJWV.Vc2vII/tVef.7CFXZnJMtUmyZCo924DJ4ZCBFTFpS', 'user');

@@ -9,14 +9,15 @@ const createCursoSchema = Joi.object({
 });
 
 const updateCursoSchema = Joi.object({
-  nome: Joi.string().min(2).max(100).messages({
+  nome: Joi.string().min(2).max(100).required().messages({
+    'string.empty': 'Nome is required',
     'string.min': 'Nome must be at least 2 characters',
     'string.max': 'Nome must not exceed 100 characters'
   })
 });
 
 const validateCreateCurso = (req, res, next) => {
-  const { error } = createCursoSchema.validate(req.body, { allowUnknown: true, stripUnknown: true });
+  const { error } = createCursoSchema.validate(req.body, { stripUnknown: true });
   if (error) {
     return res.status(400).json({
       success: false,
@@ -28,7 +29,7 @@ const validateCreateCurso = (req, res, next) => {
 };
 
 const validateUpdateCurso = (req, res, next) => {
-  const { error } = updateCursoSchema.validate(req.body);
+  const { error } = updateCursoSchema.validate(req.body, { stripUnknown: true });
   if (error) {
     return res.status(400).json({
       success: false,

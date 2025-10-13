@@ -10,7 +10,8 @@
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "generate-passwords": "node scripts/generatePasswords.js"
   },
   "dependencies": {
     "express": "^4.18.2",

@@ -72,16 +72,43 @@ class CursoController {
    *         application/json:
    *           schema:
    *             type: object
+   *             required:
+   *               - nome
    *             properties:
    *               nome:
    *                 type: string
-   *               codigo:
-   *                 type: string
-   *               ativo:
-   *                 type: boolean
+   *                 minLength: 2
+   *                 maxLength: 100
+   *                 example: "Análise e Desenvolvimento de Sistemas"
    *     responses:
    *       201:
    *         description: Course created successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 message:
+   *                   type: string
+   *                   example: Course created successfully
+   *                 data:
+   *                   type: object
+   *                   properties:
+   *                     id_curso:
+   *                       type: integer
+   *                       example: 1
+   *                     nome:
+   *                       type: string
+   *                       example: "Análise e Desenvolvimento de Sistemas"
+   *       400:
+   *         description: Validation error
+   *       401:
+   *         description: Unauthorized
+   *       403:
+   *         description: Insufficient permissions
    */
   createCurso = asyncHandler(async (req, res) => {
     const curso = await this.cursoService.createCurso(req.body, req.user.id);
@@ -102,9 +129,50 @@ class CursoController {
    *         required: true
    *         schema:
    *           type: integer
+   *         description: Course ID
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               nome:
+   *                 type: string
+   *                 minLength: 2
+   *                 maxLength: 100
+   *                 example: "Análise e Desenvolvimento de Sistemas"
    *     responses:
    *       200:
    *         description: Course updated successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                   example: true
+   *                 message:
+   *                   type: string
+   *                   example: Course updated successfully
+   *                 data:
+   *                   type: object
+   *                   properties:
+   *                     id_curso:
+   *                       type: integer
+   *                       example: 1
+   *                     nome:
+   *                       type: string
+   *                       example: "Análise e Desenvolvimento de Sistemas"
+   *       400:
+   *         description: Validation error
+   *       401:
+   *         description: Unauthorized
+   *       403:
+   *         description: Insufficient permissions
+   *       404:
+   *         description: Course not found
    */
   updateCurso = asyncHandler(async (req, res) => {
     const curso = await this.cursoService.updateCurso(req.params.id, req.body, req.user.id);
