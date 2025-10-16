@@ -11,18 +11,7 @@ class AuthService {
 
   async login(username, password, req = null) {
     try {
-      // Fallback para usuários hardcoded se banco não estiver disponível
-      let user;
-      try {
-        user = await this.usuarioRepository.findByUsername(username);
-      } catch (dbError) {
-        console.log('Database not available, using fallback users');
-        const fallbackUsers = {
-          admin: { id_usuario: 1, username: 'admin', password_hash: '$2a$10$Ziq2Gzg56zD3Hn18X7MhJugVddNk3CzUXA/3kRGPj1WWcAD5eFDrC', role: 'admin' },
-          user: { id_usuario: 2, username: 'user', password_hash: '$2a$10$DlwHy8ZRJWV.Vc2vII/tVef.7CFXZnJMtUmyZCo924DJ4ZCBFTFpS', role: 'user' }
-        };
-        user = fallbackUsers[username];
-      }
+      const user = await this.usuarioRepository.findByUsername(username);
       
       if (!user) {
         await this.logService.log('LOGIN_FAILED', 'AUTH', username, 'anonymous', { username, reason: 'user_not_found' }, req);

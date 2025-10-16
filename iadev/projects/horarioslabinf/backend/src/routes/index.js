@@ -15,15 +15,8 @@ router.use('/aulas', aulaRoutes);
 // API Info
 router.get('/', (req, res) => {
   res.json({
-    message: 'Horários Lab API v1.0.0',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/api/v1/auth',
-      cursos: '/api/v1/cursos',
-      professores: '/api/v1/professores',
-      aulas: '/api/v1/aulas',
-      docs: '/api-docs'
-    }
+    message: 'API Online',
+    status: 'active'
   });
 });
 

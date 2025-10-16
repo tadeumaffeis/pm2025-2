@@ -16,11 +16,13 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - pm20252_network
-    restart: unless-stopped
+    restart: on-failure:3
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
       timeout: 20s
       retries: 10
+      start_period: 60s
 
   # MongoDB Service
   pm20252_mongo_service:
@@ -36,7 +38,13 @@ services:
       - mongo_data:/data/db
     networks:
       - pm20252_network
-    restart: unless-stopped
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   # Flyway Service
   pm20252_flyway_service:
@@ -88,7 +96,13 @@ services:
         condition: service_completed_successfully
     networks:
       - pm20252_network
-    restart: unless-stopped
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/v1/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # Frontend Service
   pm20252_frontend_service:
@@ -104,7 +118,13 @@ services:
       - pm20252_backend_service
     networks:
       - pm20252_network
-    restart: unless-stopped
+    restart: on-failure:3
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   # Portainer Service
   pm20252_portainer_service:
@@ -117,7 +137,7 @@ services:
       - portainer_data:/data
     networks:
       - pm20252_network
-    restart: unless-stopped
+    restart: on-failure:3
 
 volumes:
   mysql_data:

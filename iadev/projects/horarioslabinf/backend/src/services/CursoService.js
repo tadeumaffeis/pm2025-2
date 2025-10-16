@@ -31,24 +31,28 @@ class CursoService {
     return curso;
   }
 
-  async createCurso(data, userId) {
+  async createCurso(data, userId = null) {
     const curso = await this.cursoRepository.create(data);
-    await this.logService.log('CREATE', 'CURSO', curso.id_curso, userId, data);
+    if (userId) {
+      await this.logService.log('CREATE', 'CURSO', curso.id_curso, userId, data);
+    }
     return curso;
   }
 
-  async updateCurso(id, data, userId) {
+  async updateCurso(id, data, userId = null) {
     await this.getCursoById(id);
     const updatedCurso = await this.cursoRepository.update(id, data);
-    await this.logService.log('UPDATE', 'CURSO', id, userId, data);
+    if (userId) {
+      await this.logService.log('UPDATE', 'CURSO', id, userId, data);
+    }
     return updatedCurso;
   }
 
-  async deleteCurso(id, userId) {
+  async deleteCurso(id, userId = null) {
     await this.getCursoById(id);
     const deleted = await this.cursoRepository.delete(id);
     
-    if (deleted) {
+    if (deleted && userId) {
       await this.logService.log('DELETE', 'CURSO', id, userId);
     }
     

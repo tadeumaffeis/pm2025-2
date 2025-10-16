@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -13,9 +13,11 @@ import {
 } from '@mui/material';
 import { LogoutOutlined, SchoolOutlined, ComputerOutlined, PersonOutlined } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import CursoManager from './CursoManager';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
+  const [activeView, setActiveView] = useState('dashboard');
 
   const handleLogout = () => {
     logout();
@@ -49,7 +51,7 @@ const Dashboard = () => {
         
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4}>
-            <Card>
+            <Card sx={{ cursor: 'pointer' }} onClick={() => setActiveView('cursos')}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <SchoolOutlined color="primary" sx={{ mr: 1 }} />
@@ -97,15 +99,29 @@ const Dashboard = () => {
           </Grid>
         </Grid>
 
-        <Paper sx={{ p: 3, mt: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Bem-vindo ao Sistema de Horários Lab
-          </Typography>
-          <Typography variant="body1">
-            Este sistema permite o gerenciamento completo de horários de laboratórios, 
-            incluindo cursos, professores, disciplinas e agendamentos.
-          </Typography>
-        </Paper>
+        {activeView === 'dashboard' && (
+          <Paper sx={{ p: 3, mt: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Bem-vindo ao Sistema de Horários Lab
+            </Typography>
+            <Typography variant="body1">
+              Este sistema permite o gerenciamento completo de horários de laboratórios, 
+              incluindo cursos, professores, disciplinas e agendamentos.
+            </Typography>
+          </Paper>
+        )}
+
+        {activeView === 'cursos' && (
+          <Paper sx={{ p: 3, mt: 3 }}>
+            <Button 
+              onClick={() => setActiveView('dashboard')} 
+              sx={{ mb: 2 }}
+            >
+              ← Voltar ao Dashboard
+            </Button>
+            <CursoManager />
+          </Paper>
+        )}
       </Container>
     </Box>
   );

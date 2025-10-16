@@ -111,7 +111,8 @@ class CursoController {
    *         description: Insufficient permissions
    */
   createCurso = asyncHandler(async (req, res) => {
-    const curso = await this.cursoService.createCurso(req.body, req.user.id);
+    const userId = req.user ? req.user.id : null;
+    const curso = await this.cursoService.createCurso(req.body, userId);
     return ApiResponse.success(res, curso, 'Course created successfully', 201);
   });
 
@@ -175,7 +176,8 @@ class CursoController {
    *         description: Course not found
    */
   updateCurso = asyncHandler(async (req, res) => {
-    const curso = await this.cursoService.updateCurso(req.params.id, req.body, req.user.id);
+    const userId = req.user ? req.user.id : null;
+    const curso = await this.cursoService.updateCurso(req.params.id, req.body, userId);
     return ApiResponse.success(res, curso, 'Course updated successfully');
   });
 
@@ -198,7 +200,8 @@ class CursoController {
    *         description: Course deleted successfully
    */
   deleteCurso = asyncHandler(async (req, res) => {
-    await this.cursoService.deleteCurso(req.params.id, req.user.id);
+    const userId = req.user ? req.user.id : null;
+    await this.cursoService.deleteCurso(req.params.id, userId);
     return ApiResponse.success(res, null, 'Course deleted successfully');
   });
 

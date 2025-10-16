@@ -4,10 +4,18 @@ class BaseRepository {
   constructor(model) {
     this.model = model;
     this.tableName = model.tableName;
+    this.connection = null;
+  }
+
+  getConnection() {
+    if (!this.connection) {
+      this.connection = getMySQLConnection();
+    }
+    return this.connection;
   }
 
   async findAll(conditions = {}, limit = null, offset = 0) {
-    const connection = getMySQLConnection();
+    const connection = this.getConnection();
     let query = `SELECT * FROM ${this.tableName}`;
     const params = [];
 
@@ -28,7 +36,7 @@ class BaseRepository {
   }
 
   async findById(id) {
-    const connection = getMySQLConnection();
+    const connection = this.getConnection();
     const idField = this.getIdField();
     const [rows] = await connection.execute(
       `SELECT * FROM ${this.tableName} WHERE ${idField} = ?`,
@@ -51,7 +59,7 @@ class BaseRepository {
   }
 
   async create(data) {
-    const connection = getMySQLConnection();
+    const connection = this.getConnection();
     const fields = Object.keys(data).join(', ');
     const placeholders = Object.keys(data).map(() => '?').join(', ');
     const values = Object.values(data);
@@ -65,7 +73,7 @@ class BaseRepository {
   }
 
   async update(id, data) {
-    const connection = getMySQLConnection();
+    const connection = this.getConnection();
     const idField = this.getIdField();
     const fields = Object.keys(data).map(key => `${key} = ?`).join(', ');
     const values = [...Object.values(data), id];
@@ -79,7 +87,7 @@ class BaseRepository {
   }
 
   async delete(id) {
-    const connection = getMySQLConnection();
+    const connection = this.getConnection();
     const idField = this.getIdField();
     const [result] = await connection.execute(
       `DELETE FROM ${this.tableName} WHERE ${idField} = ?`,
@@ -89,7 +97,7 @@ class BaseRepository {
   }
 
   async count(conditions = {}) {
-    const connection = getMySQLConnection();
+    const connection = this.getConnection();
     let query = `SELECT COUNT(*) as total FROM ${this.tableName}`;
     const params = [];
 

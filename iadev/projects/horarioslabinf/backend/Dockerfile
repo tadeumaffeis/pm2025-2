@@ -1,14 +1,26 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --only=production
+# Instalar wget para healthcheck
+RUN apk add --no-cache wget
 
-COPY src/ ./src/
+# Copiar arquivos de dependências
+COPY package*.json ./
+
+# Instalar dependências como root
+RUN npm ci --only=production && npm cache clean --force
+
+# Copiar código fonte
+COPY . .
+
+# Criar usuário e ajustar permissões
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+RUN chown -R nodejs:nodejs /app
+RUN chmod -R 755 /app
+
+USER nodejs
 
 EXPOSE 3000
-
-USER node
 
 CMD ["npm", "start"]

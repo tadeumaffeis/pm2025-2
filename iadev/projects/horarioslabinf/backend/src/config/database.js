@@ -1,21 +1,24 @@
 const mysql = require('mysql2/promise');
 const mongoose = require('mongoose');
 
-let mysqlConnection = null;
+let mysqlPool = null;
 
 const connectMySQL = async () => {
   try {
-    mysqlConnection = await mysql.createConnection({
+    mysqlPool = mysql.createPool({
       host: process.env.MYSQL_HOST,
       port: process.env.MYSQL_PORT,
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0
     });
-    console.log('MySQL connected successfully');
-    return mysqlConnection;
+    console.log('MySQL pool created successfully');
+    return mysqlPool;
   } catch (error) {
-    console.error('MySQL connection failed:', error);
+    console.error('MySQL pool creation failed:', error);
     throw error;
   }
 };
@@ -29,7 +32,7 @@ const connectMongoDB = async () => {
   }
 };
 
-const getMySQLConnection = () => mysqlConnection;
+const getMySQLConnection = () => mysqlPool;
 
 module.exports = {
   connectMySQL,
