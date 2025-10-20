@@ -1,0 +1,63 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: horariolabinf-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: horariolabinf
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/dump:/docker-entrypoint-initdb.d
+    networks:
+      - horariolabinf-network
+
+  mongo:
+    image: mongo:7.0
+    container_name: horariolabinf-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+      MONGO_INITDB_DATABASE: horariolabinf
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo/dump:/docker-entrypoint-initdb.d
+    networks:
+      - horariolabinf-network
+
+  flyway:
+    image: flyway/flyway:9.22
+    container_name: horariolabinf-flyway
+    command: migrate
+    volumes:
+      - ./flyway/sql:/flyway/sql
+      - ./flyway/conf:/flyway/conf
+    depends_on:
+      - mysql
+    networks:
+      - horariolabinf-network
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: horariolabinf-portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - horariolabinf-network
+
+volumes:
+  mysql_data:
+  mongo_data:
+  portainer_data:
+
+networks:
+  horariolabinf-network:
+    driver: bridge

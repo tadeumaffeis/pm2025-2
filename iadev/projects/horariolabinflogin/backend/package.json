@@ -1,0 +1,25 @@
+{
+  "name": "horariolabinflogin-backend",
+  "version": "1.0.0",
+  "description": "Backend para sistema de horário lab inf",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite-node src/server.js --watch",
+    "start": "node src/server.js",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "mongoose": "^8.19.1",
+    "mysql2": "^3.15.2",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "vite": "^5.0.8",
+    "vite-node": "^1.0.11"
+  }
+}
